@@ -1,0 +1,138 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+	<meta charset="UTF-8" />
+	<title>Space Pirate Defense Menu</title>
+	<script ty pe="text/javascript" src="phaser.min.js"></script>
+
+    <style type="text/css">
+        body {
+            
+            background-image: url(back4.JPG);
+            background-repeat: no-repeat;
+            background-size: cover;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<script type="text/javascript">
+
+var menuPage = new Phaser.Game(1920, 1920, Phaser.AUTO, '', {preload: preload, create: create});
+
+
+function preload() {
+ 
+    menuPage.load.audio('menuBackground', 'circus.mp3');
+    menuPage.load.image('stars', 'stars.jpg');
+    menuPage.load.image('gameLogo','gameLogo.png');
+    menuPage.load.image('menu','menu.png');
+    menuPage.load.image('play','play.png');
+    menuPage.load.image('tutorial','tutorial.png');
+    menuPage.load.image('gameMusic','GameMusic.png');
+    menuPage.load.image('menuMusic','MenuLicense.png');
+    menuPage.load.image('sound','VolumeIcon.png');
+    
+    menuPage.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+}
+
+//var for the menu music
+var menuMusic;
+var sound = false;
+
+function create() {
+    
+    	menuPage.scale.pageAlignVertically = true;
+    	menuPage.scale.pageAlignHorizontally = true; 
+    	menuPage.scale.refresh();
+    
+        menuMusic = menuPage.add.audio('menuBackground');
+        menuMusic.loopFull(.2);
+    
+        var background = menuPage.add.sprite(0, 0, 'stars');
+  	    
+  	    var gameLogo = menuPage.add.sprite(menuPage.world.centerX-840, 200, 'gameLogo');
+  	    
+  	    //to check if sound is off coming to menu from game
+  	    var urlParams = new URLSearchParams(window.location.search);
+  	    if(urlParams.has('sound')){
+	    sound = urlParams.get('sound');
+	    console.log("SOUND " + sound);
+	    if(sound == 'true'){
+	        musicOnOff();
+	    }
+	}
+        
+        var menu = menuPage.add.sprite(menuPage.world.centerX, 650, 'menu');
+        menu.anchor.setTo(0.5, 0.5);
+
+		var playButton = menuPage.add.button(220, 900, 'play', playGame, this);
+		playButton.anchor.setTo(0.5,0.5);
+		
+		var tutorialButton = menuPage.add.button(310, 1100, 'tutorial', tutorial, this);
+		tutorialButton.anchor.setTo(0.5,0.5);
+		
+		var style = { font: "42px Arial", fill: "#ffffff", align: "center"};
+		
+		//to give credit for all items utilized in game that we did not provide
+		var credits = menuPage.add.text(menuPage.world.centerX, 1500, 'Graphics From Kenney.nl\nLaser Sounds From Kenney.nl\nGameplay and Menu Background Music From www.orangefreesounds.com', style);
+		credits.anchor.setTo(0.5,0.5);
+		
+		//to allow user to turn music on and off
+		var volume = menuPage.add.button(menuPage.world.centerX, 1800, 'sound', musicOnOff, this);
+		volume.anchor.setTo(0.5,0.5);
+		
+		//to hold link to music licenses
+		var license1 = menuPage.add.button(310, 1800, 'gameMusic', gameMusicLink, this);
+		license1.anchor.setTo(0.5,0.5);
+		
+		//to hold link to music licenses
+		var license2 = menuPage.add.button(1600, 1800, 'menuMusic', menuMusicLink, this);
+		license2.anchor.setTo(0.5,0.5);
+		
+		
+}
+
+function playGame(){
+    var level1Text = menuPage.add.text(450,750, 'Easy', { font: "60px Holtwood One SC", fill: "#ECF0F1" });
+        level1Text.inputEnabled = true;
+        level1Text.events.onInputDown.add(function(){
+            window.location.href = '/game?difficulty=easy&sound=' + menuPage.sound.mute;
+        }, this);
+        
+         var level2Text = menuPage.add.text(450,850, 'Medium', { font: "60px Holtwood One SC", fill: "#ECF0F1" });
+        level2Text.inputEnabled = true;
+        level2Text.events.onInputDown.add(function(){
+            window.location.href = '/game?difficulty=medium&sound=' + menuPage.sound.mute;
+        }, this);
+        
+         var level3Text = menuPage.add.text(450,950, 'Hard', { font: "60px Holtwood One SC", fill: "#ECF0F1" });
+        level3Text.inputEnabled = true;
+        level3Text.events.onInputDown.add(function(){
+            window.location.href = '/game?difficulty=hard&sound=' + menuPage.sound.mute;
+        }, this);
+        
+	}
+	
+function tutorial(){
+	    window.location.href = '/tutorial';
+	}
+
+//links to music licenses	
+function gameMusicLink(){
+        window.location.href = 'https://creativecommons.org/licenses/by/4.0/';
+    }
+    
+function menuMusicLink(){
+        window.location.href = 'https://creativecommons.org/licenses/by-nc/4.0/';
+    }    
+
+function musicOnOff(){
+        menuPage.sound.mute = !menuPage.sound.mute;
+    }  
+
+</script>
+
+</body>
+</html>
+
